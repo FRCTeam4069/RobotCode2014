@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team4069.thirdyear.RobotMap;
 
 /**
- *
+ * Drivetrain subsystem.
+ * @author Edmund
  */
 public class DriveTrain extends Subsystem {
 
@@ -49,6 +50,7 @@ public class DriveTrain extends Subsystem {
      * speed to zero.
      */
     public void brake() {
-        //To change body of generated methods, choose Tools | Templates.
+        leftMotor.set(0);
+        rightMotor.set(0);
     }
 }

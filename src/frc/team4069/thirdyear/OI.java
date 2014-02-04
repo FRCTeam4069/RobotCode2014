@@ -4,7 +4,6 @@ import frc.team4069.thirdyear.commands.ShootCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team4069.thirdyear.commands.ReloadCommand;
 
 /**

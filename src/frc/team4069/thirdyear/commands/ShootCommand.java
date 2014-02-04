@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package frc.team4069.thirdyear.commands;
 
 /**
  * This will be implemented with the Shooter subsystem.
+ *
  * @author Edmund
  */
 public class ShootCommand extends CommandBase {

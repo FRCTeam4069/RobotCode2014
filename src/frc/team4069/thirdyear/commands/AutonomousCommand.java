@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.networktables2.type.StringArray;
 
 /**
  * Command that moves the robot when the target is detected.
+ *
  * @author Edmund
  */
 public class AutonomousCommand extends CommandBase {
@@ -34,9 +35,9 @@ public class AutonomousCommand extends CommandBase {
             hasLockOn = true;
         }
         if (hasLockOn) {
-        drivetrain.tankDrive(1,1);
+            drivetrain.tankDrive(1, 1);
         } else {
-        drivetrain.brake();
+            drivetrain.brake();
         }
 
     }

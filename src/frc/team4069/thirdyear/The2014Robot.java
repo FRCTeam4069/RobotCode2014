@@ -31,10 +31,7 @@ public class The2014Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand();
-
-        // Initialize all subsystems
         CommandBase.init();
     }
 
@@ -42,7 +39,6 @@ public class The2014Robot extends IterativeRobot {
      * Schedules the autonomous command.
      */
     public void autonomousInit() {
-       
         autonomousCommand.start();
     }
 
@@ -54,10 +50,6 @@ public class The2014Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-	// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
         autonomousCommand.cancel();
     }
 

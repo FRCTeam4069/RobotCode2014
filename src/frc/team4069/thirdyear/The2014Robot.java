@@ -64,6 +64,12 @@ public class The2014Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+        
         LiveWindow.run();
     }
+    
+    public void disabledInit() {
+    autonomousCommand.cancel();
+    }
+    
 }

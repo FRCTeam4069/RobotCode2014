@@ -4,16 +4,16 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 package frc.team4069.thirdyear;
 
-
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team4069.thirdyear.commands.CommandBase;
 import frc.team4069.thirdyear.commands.AutonomousCommand;
+import frc.team4069.thirdyear.commands.DriveCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,14 +25,17 @@ import frc.team4069.thirdyear.commands.AutonomousCommand;
 public class The2014Robot extends IterativeRobot {
 
     private Command autonomousCommand;
+    private Command driveCommand;
+    private Command calibrateCommand;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-        autonomousCommand = new AutonomousCommand();
         CommandBase.init();
+        autonomousCommand = new AutonomousCommand();
+        driveCommand = new DriveCommand();
     }
 
     /**
@@ -40,6 +43,7 @@ public class The2014Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         autonomousCommand.start();
+        driveCommand.cancel();
     }
 
     /**
@@ -51,6 +55,7 @@ public class The2014Robot extends IterativeRobot {
 
     public void teleopInit() {
         autonomousCommand.cancel();
+        driveCommand.start();
     }
 
     /**
@@ -59,17 +64,24 @@ public class The2014Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
     }
+
+    /**
+     * This function is called to initialize test mode
+     */
+    public void testInit() {
+        calibrateCommand.start();
+    }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        
-        LiveWindow.run();
+        Scheduler.getInstance().run();
+      //  LiveWindow.run();
     }
-    
+
     public void disabledInit() {
-    autonomousCommand.cancel();
+        autonomousCommand.cancel();
+        driveCommand.cancel();
     }
-    
 }

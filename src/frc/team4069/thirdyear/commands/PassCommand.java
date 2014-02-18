@@ -1,13 +1,12 @@
+/*\
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package frc.team4069.thirdyear.commands;
 
-/**
- * This will be implemented with the Shooter subsystem.
- *
- * @author Edmund
- */
-public class ReloadCommand extends CommandBase {
+public class PassCommand extends CommandBase {
 
-    public ReloadCommand() {
+    public PassCommand() {
         requires(shooter);
         requires(pickup);
         // Use requires() here to declare subsystem dependencies

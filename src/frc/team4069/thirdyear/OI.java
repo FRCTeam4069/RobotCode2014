@@ -28,6 +28,7 @@ public class OI {
         Button shootButton = new JoystickButton(shootStick, 1);
         shootButton.whenPressed(new ShootCommand());
         shootButton.whenReleased(new ReloadCommand());
+       
     }
 
     /* Getters */

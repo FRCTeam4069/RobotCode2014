@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4069.thirdyear.OI;
 import frc.team4069.thirdyear.subsystems.DriveTrain;
+import frc.team4069.thirdyear.subsystems.Pickup;
 import frc.team4069.thirdyear.subsystems.Shooter;
 
 /**
@@ -17,10 +18,14 @@ import frc.team4069.thirdyear.subsystems.Shooter;
 public abstract class CommandBase extends Command {
 
     public static OI oi;
-    public static DriveTrain drivetrain = new DriveTrain();
-    public static Shooter shooter = new Shooter();
+    public static DriveTrain drivetrain;
+    public static Shooter shooter;
+    public static Pickup pickup;
 
     public static void init() {
+        drivetrain = new DriveTrain();
+        shooter = new Shooter();
+        pickup = new Pickup();
         // This MUST be here. If the OI creates Commands (which it very likely
         // will), constructing it during the construction of CommandBase (from
         // which commands extend), subsystems are not guaranteed to be

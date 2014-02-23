@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4069.thirdyear.RobotMap;
 
 /**
+ * Pickup system. Includes roller motor and arm solenoid.
+ * Batteries not included.
  *
- * @author Almond
+ * @author Edmund
  */
 public class Pickup extends Subsystem {
 
@@ -19,19 +21,25 @@ public class Pickup extends Subsystem {
     Talon pickupRoller;
 
     public Pickup() {
-    pickupArm = new DoubleSolenoid(RobotMap.PICKUP_PISTON_1, RobotMap.PICKUP_PISTON_2);
-    pickupRoller = new Talon(RobotMap.PICKUP_ROLLER);
+        pickupArm = new DoubleSolenoid(RobotMap.PICKUP_PISTON_1,
+                RobotMap.PICKUP_PISTON_2);
+        pickupRoller = new Talon(RobotMap.PICKUP_ROLLER);
     }
-    
+
     /**
-     * Makes the pickup mechanism move..
+     * Makes the pickup mechanism move.
      *
-     * @param speed The speed of movement. Positive for upwards, negative for
-     * downwards.
+     * @param up The direction of movement. True for upward, false for
+     *           downward.
      */
     public void move(boolean up) {
         pickupArm.set(up ? DoubleSolenoid.Value.kReverse :
                 DoubleSolenoid.Value.kForward);
+    }
+
+    public void toggle() {
+        pickupArm.set(
+                pickupArm.get() == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
     }
 
     /**
@@ -47,7 +55,7 @@ public class Pickup extends Subsystem {
     }
 
     /**
-     * The default command is ReloadCommand. May be unwise - check with team?
+     * There is <b>no</b> default command.
      */
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.

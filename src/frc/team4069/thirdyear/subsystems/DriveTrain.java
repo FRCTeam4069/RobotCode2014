@@ -21,14 +21,14 @@ public class DriveTrain extends Subsystem {
     private static final double DISTANCE_PER_PULSE = (24.0 / 42.0) * 3.0 * 4.0 * Math.PI / 128;
     //0.00467498906784195422390274312988;//0.05609986881410345068683291755856;//0.0146869113074526041414067839586;//0.17624293568943124969688;//0.0140249672;
     private static final double MAX_INCH_PER_SECOND = 13 * 12;
+    public static final double SPEED_LIMIT = 0.9;
     private Talon leftMotor;
     private Talon rightMotor;
     private Encoder leftEncoder;
     private Encoder rightEncoder;
-    private static final double speedP = 1.2, speedI = 0.009, speedD = 0.02;
+    private static final double speedP = 1.2, speedI = 0.07, speedD = 0.02;
     private static final double distP = 0.1, distI = 0, distD = 0;
     private PIDController arcadeController;
-    private PIDController distanceController;
 
     /**
      * Drivetrain constructor.
@@ -49,11 +49,12 @@ public class DriveTrain extends Subsystem {
         leftEncoder.start();
         rightEncoder.start();
         arcadeController = new PIDController(speedP, speedI, speedD,
-                encoderArcadeSource, encoderArcadeOutput);
+                encoderArcadeSource, encoderArcadeOutput, 10);
         arcadeController.setInputRange(-1, 1);
         arcadeController.setOutputRange(-1, 1);
-        distanceController = new PIDController(distP, distI, distD,
-                encoderDistSource, encoderDistOutput);
+
+//        distanceController = new PIDController(distP, distI, distD,
+//                encoderDistSource, encoderDistOutput);
     }
 
     /**
@@ -76,21 +77,21 @@ public class DriveTrain extends Subsystem {
      * @param right Speed for the right motors.
      */
     public void tankDrive(double left, double right) {
-        leftMotor.set(-left * 0.8);
-        rightMotor.set(right * 0.8);
+        leftMotor.set(-left * SPEED_LIMIT);
+        rightMotor.set(right * SPEED_LIMIT);
     }
+    double controllerValue;
+
     /**
      * Drives, actively compensating for drift.
      *
      * @param moveValue   Speed for forward movement.
      * @param rotateValue Speed for turning. PID controlled.
      */
-    double controllerValue;
-
     public void arcadeControlledDrive(double moveValue, double rotateValue) {
         arcadeController.enable();
         arcadeController.setSetpoint(rotateValue);
-        controllerValue = arcadeController.get() * 0.2 + controllerValue * 0.8;
+        controllerValue = arcadeController.get() * 0.3 + controllerValue * 0.7;
         arcadeDrive(moveValue, rotateValue + controllerValue);// + arcadeController.get());
     }
 
@@ -112,6 +113,8 @@ public class DriveTrain extends Subsystem {
         double cosTheta = Math.cos(theta);
         leftMotorSpeed = (sinTheta + cosTheta) * r;
         rightMotorSpeed = (sinTheta - cosTheta) * r;
+//        leftMotorSpeed = (moveValue + rotateValue) / 2;
+//        rightMotorSpeed = (moveValue - rotateValue) / 2;
         //Log.log("Left: " + leftMotorSpeed + " Right: " + rightMotorSpeed);
         tankDrive(leftMotorSpeed, rightMotorSpeed);
     }
@@ -172,8 +175,7 @@ public class DriveTrain extends Subsystem {
         leftEncoder.reset();
         rightEncoder.reset();
     }
-    private double pidOutputMagnitude;
-    private double pidOutputTurnValue;
+    
     private PIDSource encoderArcadeSource = new PIDSource() {
         public double pidGet() {
             return getTurnValue();

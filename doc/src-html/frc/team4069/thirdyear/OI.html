@@ -8,45 +8,59 @@
 <div class="sourceContainer">
 <pre><span class="sourceLineNo">001</span>package frc.team4069.thirdyear;<a name="line.1"></a>
 <span class="sourceLineNo">002</span><a name="line.2"></a>
-<span class="sourceLineNo">003</span>import frc.team4069.thirdyear.commands.ShootCommand;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import edu.wpi.first.wpilibj.Joystick;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import edu.wpi.first.wpilibj.buttons.Button;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import edu.wpi.first.wpilibj.buttons.JoystickButton;<a name="line.6"></a>
-<span class="sourceLineNo">007</span>import frc.team4069.thirdyear.commands.ReloadCommand;<a name="line.7"></a>
-<span class="sourceLineNo">008</span><a name="line.8"></a>
-<span class="sourceLineNo">009</span>/**<a name="line.9"></a>
-<span class="sourceLineNo">010</span> * This class is the glue that binds the controls on the physical operator<a name="line.10"></a>
-<span class="sourceLineNo">011</span> * interface to the commands and command groups that allow control of the robot.<a name="line.11"></a>
-<span class="sourceLineNo">012</span> *<a name="line.12"></a>
-<span class="sourceLineNo">013</span> * @author Edmund<a name="line.13"></a>
-<span class="sourceLineNo">014</span> */<a name="line.14"></a>
-<span class="sourceLineNo">015</span>public class OI {<a name="line.15"></a>
-<span class="sourceLineNo">016</span><a name="line.16"></a>
-<span class="sourceLineNo">017</span><a name="line.17"></a>
-<span class="sourceLineNo">018</span>    /* Joystick Ports */<a name="line.18"></a>
-<span class="sourceLineNo">019</span>    private static final int DRIVE_STICK_PORT = 1;<a name="line.19"></a>
-<span class="sourceLineNo">020</span>    private static final int SHOOT_STICK_PORT = 2;<a name="line.20"></a>
-<span class="sourceLineNo">021</span>    /* Joystick Objects */<a name="line.21"></a>
-<span class="sourceLineNo">022</span>    private Joystick driveStick;<a name="line.22"></a>
-<span class="sourceLineNo">023</span>    private Joystick shootStick;<a name="line.23"></a>
-<span class="sourceLineNo">024</span><a name="line.24"></a>
-<span class="sourceLineNo">025</span>    public OI() {<a name="line.25"></a>
-<span class="sourceLineNo">026</span>        driveStick = new Joystick(DRIVE_STICK_PORT);<a name="line.26"></a>
-<span class="sourceLineNo">027</span>        shootStick = new Joystick(SHOOT_STICK_PORT);<a name="line.27"></a>
-<span class="sourceLineNo">028</span>        Button shootButton = new JoystickButton(shootStick, 1);<a name="line.28"></a>
-<span class="sourceLineNo">029</span>        shootButton.whenPressed(new ShootCommand());<a name="line.29"></a>
-<span class="sourceLineNo">030</span>        shootButton.whenReleased(new ReloadCommand());<a name="line.30"></a>
-<span class="sourceLineNo">031</span>    }<a name="line.31"></a>
-<span class="sourceLineNo">032</span><a name="line.32"></a>
-<span class="sourceLineNo">033</span>    /* Getters */<a name="line.33"></a>
-<span class="sourceLineNo">034</span>    public Joystick getDriveStick() {<a name="line.34"></a>
-<span class="sourceLineNo">035</span>        return driveStick;<a name="line.35"></a>
-<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>    public Joystick getShootStick() {<a name="line.38"></a>
-<span class="sourceLineNo">039</span>        return shootStick;<a name="line.39"></a>
-<span class="sourceLineNo">040</span>    }<a name="line.40"></a>
-<span class="sourceLineNo">041</span>}<a name="line.41"></a>
+<span class="sourceLineNo">003</span>import edu.wpi.first.wpilibj.Joystick;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import edu.wpi.first.wpilibj.buttons.Button;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import edu.wpi.first.wpilibj.buttons.JoystickButton;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>/**<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * This class is the glue that binds the controls on the physical operator<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * interface to the commands and command groups that allow control of the robot.<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * @author Edmund<a name="line.11"></a>
+<span class="sourceLineNo">012</span> */<a name="line.12"></a>
+<span class="sourceLineNo">013</span>public class OI {<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>    /**<a name="line.15"></a>
+<span class="sourceLineNo">016</span>     * Drive joystick port.<a name="line.16"></a>
+<span class="sourceLineNo">017</span>     */<a name="line.17"></a>
+<span class="sourceLineNo">018</span>    private static final int DRIVE_STICK_PORT = 1;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>    /**<a name="line.19"></a>
+<span class="sourceLineNo">020</span>     * Shoot joystick port.<a name="line.20"></a>
+<span class="sourceLineNo">021</span>     */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    private static final int SHOOT_STICK_PORT = 2;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>    /**<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     * Driving joystick.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>     */<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    private Joystick driveStick;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * Shooting joystick.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    private Joystick shootStick;<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>    public OI() {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>        driveStick = new Joystick(DRIVE_STICK_PORT);<a name="line.33"></a>
+<span class="sourceLineNo">034</span>        shootStick = new Joystick(SHOOT_STICK_PORT);<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    }<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>    /**<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     * Gets the driving joystick.<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     *<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * @return<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     */<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    public Joystick getDriveStick() {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        return driveStick;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>    }<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * Gets the shooting joystick.<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     * NOTE: This is not currently used.<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     *<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * @return<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    public Joystick getShootStick() {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        return shootStick;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    }<a name="line.54"></a>
+<span class="sourceLineNo">055</span>}<a name="line.55"></a>
 
 
 

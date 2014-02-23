@@ -39,10 +39,16 @@ public class AutonomousCommand extends CommandBase {
         hasLockOn = false;
         inPosition = false;
         drivetrain.resetDistance();
-        Timer.delay(0.5);
+        Timer.delay(0.1);
     }
 
-    // Called repeatedly when this Command is scheduled to run
+    /**
+     * Checks for the vision target, drives to the low goal and shoots into the
+     * high goal.
+     * Future implementations may forgo checking for the vision target first,
+     * because if it isn't triggered at the start it will be in the next five
+     * seconds.
+     */
     protected void execute() {
         pickup.move(false);
         double blobCount;
@@ -63,6 +69,10 @@ public class AutonomousCommand extends CommandBase {
         System.out.println("Speed " + drivetrain.getSpeed());
     }
 
+    /**
+     * Runs at the beginning of the autonomous loop. Drives the robot to the low
+     * goal.
+     */
     private void driveLoop() {
         if (drivetrain.getDistance() < GOAL_DIST * 0.73) {
             drivetrain.arcadeControlledDrive(-0.7, 0);
@@ -73,23 +83,24 @@ public class AutonomousCommand extends CommandBase {
             drivetrain.arcadeControlledDrive(-0.25, 0);
         }
         if (drivetrain.getDistance() > GOAL_DIST
-                || (Math.abs(drivetrain.getSpeed()) < 1 && new Date().getTime() - lockonTime.getTime() > 1000)) {
-            drivetrain.brake();
+                || (Math.abs(drivetrain.getSpeed()) < 1.0
+                && new Date().getTime() - lockonTime.getTime() > 1000)) {
+            drivetrain.arcadeControlledDrive(0.05, 0);
             shooter.spinWinch(0);
             hasLockOn = false;
             inPosition = true;
             inPositionTime = new Date();
         }
-//        if (drivetrain.getSpeed() < 0.5 && new Date().getTime() - lockonTime.getTime() > 1000) {
-//            
-//        }
     }
 
+    /**
+     * Runs when the robot has detected that it is at the low goal.
+     */
     private void shootLoop() {
+        drivetrain.brake();
         if (new Date().getTime() - inPositionTime.getTime() > 200) {
-            shooter.fireSolenoid(false);
+            shooter.fireSolenoid(true);
         }
-        
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -17,11 +17,26 @@ import frc.team4069.thirdyear.subsystems.Shooter;
  */
 public abstract class CommandBase extends Command {
 
+    /**
+     * Operator interface instance.
+     */
     public static OI oi;
+    /**
+     * Drivetrain instance.
+     */
     public static DriveTrain drivetrain;
+    /**
+     * Shooter instance.
+     */
     public static Shooter shooter;
+    /**
+     * Pickup instance.
+     */
     public static Pickup pickup;
 
+    /**
+     * Initializes subsystems. Call first during robotInit().
+     */
     public static void init() {
         drivetrain = new DriveTrain();
         shooter = new Shooter();
@@ -32,10 +47,6 @@ public abstract class CommandBase extends Command {
         // yet. Thus, their requires() statements may grab null pointers. Bad
         // news. Don't move it.
         oi = new OI();
-
-        // Show what command your subsystems are running on the SmartDashboard
-        SmartDashboard.putData(drivetrain);
-        SmartDashboard.putData(shooter);
     }
 
     public CommandBase(String name) {

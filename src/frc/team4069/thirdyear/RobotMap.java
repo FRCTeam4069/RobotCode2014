@@ -9,11 +9,6 @@ package frc.team4069.thirdyear;
 public interface RobotMap {
 
     //DRIVETRAIN
-    /*
-     * XXX: Setting the motor ports to 3 and 4 outputs the motor PWM signals on
-     * ports 1 and 2,
-     * and vice versa.
-     */
     /**
      * Left drive motor port.
      */
@@ -22,7 +17,7 @@ public interface RobotMap {
      * Right drive motor port.
      */
     public static final int RIGHT_MOTOR = 2;
-    /** 
+    /**
      * Left encoder Digital I/O ports.
      */
     public static final int LEFT_ENCODER_1 = 2;
@@ -54,7 +49,6 @@ public interface RobotMap {
      * Arm potentiometer port.
      */
     public static final int ARM_POTENTIOMETER = 2;
-    
     //PICKUP    
     /**
      * Pickup arm forward and backward solenoid ports.

@@ -26,11 +26,10 @@ public class The2014Robot extends IterativeRobot {
 
     private Command autonomousCommand;
     private Command driveCommand;
-    private Command calibrateCommand;
 
     /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
+     * Run when the robot is first started up and used for
+     * initialization code.
      */
     public void robotInit() {
         CommandBase.init();
@@ -39,7 +38,8 @@ public class The2014Robot extends IterativeRobot {
     }
 
     /**
-     * Schedules the autonomous command.
+     * Called when autonomous control begins.
+     * It schedules an instance of {@link AutonomousCommand}.
      */
     public void autonomousInit() {
         autonomousCommand.start();
@@ -47,19 +47,23 @@ public class The2014Robot extends IterativeRobot {
     }
 
     /**
-     * This function is called periodically during autonomous
+     * Called periodically during autonomous.
      */
-    public void autonomousPeriodic() {
+    public/*Potatoes*/ void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
 
+    /**
+     * Called when operator control begins.
+     * It schedules an instance of {@link DriveCommand}.
+     */
     public void teleopInit() {
         autonomousCommand.cancel();
         driveCommand.start();
     }
 
     /**
-     * This function is called periodically during operator control
+     * Called periodically during operator control.
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
@@ -69,15 +73,15 @@ public class The2014Robot extends IterativeRobot {
      * This function is called to initialize test mode
      */
     public void testInit() {
-        calibrateCommand.start();
     }
-    
+
     /**
-     * This function is called periodically during test mode
+     * This function is called periodically during test mode.
+     * Currently does nothing.
      */
     public void testPeriodic() {
         Scheduler.getInstance().run();
-      //  LiveWindow.run();
+        //  LiveWindow.run();
     }
 
     public void disabledInit() {

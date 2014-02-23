@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import java.util.Date;
 
 /**
+ * The command that runs during operator control.
  *
  * @author Edmund
  */
@@ -23,6 +24,9 @@ public class DriveCommand extends CommandBase {
     private double lastLeftStickX;
     private double lastLeftStickY;
 
+    /**
+     * Constructor.
+     */
     public DriveCommand() {
         requires(drivetrain);
         requires(pickup);
@@ -35,14 +39,19 @@ public class DriveCommand extends CommandBase {
         // eg. requires(chassis);
     }
 
-    // Called just before this Command runs the first time
+    /**
+     * Called at the beginning of operator control.
+     * Makes the drivetrain brake.
+     */
     protected void initialize() {
         drivetrain.brake();
     }
+    private boolean lastPickupButton = false;
+    private boolean lastOverrideButton = false;
 
-    private Date lastShotTime;
-    
-    // Called repeatedly when this Command is scheduled to run
+    /**
+     * Periodically called during operator control.
+     */
     protected void execute() {
         double currentLeftStickX = (driveStick.getRawAxis(1)) * Math.abs(
                 driveStick.getRawAxis(
@@ -58,28 +67,38 @@ public class DriveCommand extends CommandBase {
         boolean pickupIsSafe = !shooter.getReedSwitch();
         if (pickupIsSafe) {
             if (driveStick.getRawButton(3)) {
-                shooter.spinWinch(-0.6);
-            } else if (driveStick.getRawButton(2)) {
                 shooter.spinWinch(1);
+            } else if (driveStick.getRawButton(2)) {
+                if (shooter.moveToShootingAngle()) {
+                    shooter.fireSolenoid(true);
+                }
             } else if (driveStick.getRawButton(1)) {
-                shooter.spinWinch(0);
-                shooter.fireSolenoid(false);
+                if (shooter.moveToAngle(13.0)) {
+                    shooter.fireSolenoid(true);
+                }
+
             } else {
                 shooter.spinWinch(0);
-                shooter.fireSolenoid(true);
+                shooter.fireSolenoid(false);
             }
         }
-        if (driveStick.getRawButton(4) && pickupIsSafe && shooter.isArmReady()) {
+        //if (shooter.isArmReady()) {
+        if (driveStick.getRawButton(4)) {
             pickup.spin(1);
         } else {
             pickup.spin(0);
+            //  }
         }
-
-        if (driveStick.getRawButton(5)) {
-            pickup.move(true);
-        } else if (driveStick.getRawButton(6)) {
-            pickup.move(false);
+        if (driveStick.getRawButton(7) && pickupIsSafe) {
+            shooter.fireSolenoid(true);
+        } else if (!driveStick.getRawButton(7) && lastOverrideButton) {
+            shooter.fireSolenoid(false);
         }
+        if (driveStick.getRawButton(6) && !lastPickupButton) {
+            pickup.toggle();
+        }
+        lastPickupButton = driveStick.getRawButton(6);
+        lastOverrideButton = driveStick.getRawButton(7);
         System.out.println(shooter.getPotentiometerAngle());
     }
 

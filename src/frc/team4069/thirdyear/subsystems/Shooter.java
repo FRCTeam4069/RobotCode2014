@@ -7,10 +7,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4069.thirdyear.RobotMap;
-import frc.team4069.thirdyear.commands.ReloadCommand;
 
 /**
- * No idea how to implement this yet. Stay tuned.
+ * Shooter subsystem incorporating winch, transmission, and safety features.
  *
  * @author Edmund
  */
@@ -23,8 +22,11 @@ public class Shooter extends Subsystem {
     AnalogChannel armPotentiometer;
     DigitalInput reedSwitch;
     Compressor compressor;
-    private static final double SHOOTING_ANGLE = 127.73;
-    
+    private static final double SHOOTING_ANGLE = 55.5;
+    private static final double MAX_ANGLE = 60;
+    private static final double MIN_ANGLE = 13;
+    private static final double WINCH_P = 0.11;
+
     public Shooter() {
         transmissionSolenoid = new DoubleSolenoid(RobotMap.WINCH_PISTON_1,
                 RobotMap.WINCH_PISTON_2);
@@ -44,9 +46,10 @@ public class Shooter extends Subsystem {
      *                re-engages the transmission.
      */
     public void fireSolenoid(boolean forward) {
-        transmissionSolenoid.set(forward ? DoubleSolenoid.Value.kForward :
-                DoubleSolenoid.Value.kReverse);
+        transmissionSolenoid.set(forward ? DoubleSolenoid.Value.kReverse :
+                DoubleSolenoid.Value.kForward);
     }
+
     /**
      * By convention, positive speed tightens the winch,
      * negative speed releases it.
@@ -54,9 +57,6 @@ public class Shooter extends Subsystem {
      *
      * @param speed
      */
-    private static final double MAX_ANGLE = 135;
-    private static final double MIN_ANGLE = 96;
-    
     public void spinWinch(double speed) {
         if ((getPotentiometerAngle() < MAX_ANGLE && speed >= 0)
                 || (getPotentiometerAngle() > MIN_ANGLE && speed <= 0)) {
@@ -70,9 +70,17 @@ public class Shooter extends Subsystem {
 //            winchTalon.set(0);
 //        }
     }
-    private static final double POT_VALUE_AT_ZERO_VOLTS = -547.0336620966;
+    private static final double POT_VALUE_AT_ZERO_VOLTS = -547.0336620966 + 60.0;
     private static final double POT_VALUE_SLOPE = 366.3256030533;
-    
+
+    /**
+     * Gets the angle of the shooter arm potentiometer from the vertical. Scales
+     * the voltage according to the constants above. DO NOT change these
+     * constants; angular constants such as {@link Shooter#SHOOTING_ANGLE }
+     * depend on them.
+     *
+     * @return The angle in degrees of the shooter arm.
+     */
     public double getPotentiometerAngle() {
         double voltage = armPotentiometer.getAverageVoltage();
         double value = POT_VALUE_AT_ZERO_VOLTS + voltage * POT_VALUE_SLOPE;
@@ -83,20 +91,48 @@ public class Shooter extends Subsystem {
      * The default command is ReloadCommand. May be unwise - check with team?
      */
     public void initDefaultCommand() {
-        setDefaultCommand(new ReloadCommand());
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
-    
+
+    /**
+     * Checks if the pickup arm is in the correct position for shooter usage.
+     *
+     * @return The value of the reed switch on the pickup arm.
+     */
     public boolean getReedSwitch() {
         return reedSwitch.get();
     }
-    
+
+    /**
+     * Checks if the shooter arm is below or at the maximum angle.
+     *
+     * @return If the arm is ready to receive a ball.
+     */
     public boolean isArmReady() {
         return getPotentiometerAngle() >= MAX_ANGLE;
     }
-    
-    public void moveToShootingAngle() {
-        winchTalon.set(0.08 * (-getPotentiometerAngle() + SHOOTING_ANGLE));
+
+    /**
+     * Moves the winch to the shooting angle using proportional control. Makes
+     * use of {@link Shooter#moveToAngle(double)}.
+     */
+    public boolean moveToShootingAngle() {
+        return moveToAngle(SHOOTING_ANGLE);
+
+    }
+
+    /**
+     * Moves the winch to the desired angle using proportional control. Uses
+     * {@link Shooter#getPotentiometerAngle()}.
+     *
+     * @param The desired angle measured from the vertical.
+     */
+    public boolean moveToAngle(double angle) {
+        spinWinch(WINCH_P * (angle - getPotentiometerAngle()));
+        if (Math.abs(getPotentiometerAngle() - angle) < 0.8) {
+            return true;
+        }
+        return false;
     }
 }

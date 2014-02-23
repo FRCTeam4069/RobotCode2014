@@ -1,10 +1,8 @@
 package frc.team4069.thirdyear;
 
-import frc.team4069.thirdyear.commands.ShootCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.team4069.thirdyear.commands.ReloadCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -14,28 +12,43 @@ import frc.team4069.thirdyear.commands.ReloadCommand;
  */
 public class OI {
 
-
-    /* Joystick Ports */
+    /**
+     * Drive joystick port.
+     */
     private static final int DRIVE_STICK_PORT = 1;
+    /**
+     * Shoot joystick port.
+     */
     private static final int SHOOT_STICK_PORT = 2;
-    /* Joystick Objects */
+    /**
+     * Driving joystick.
+     */
     private Joystick driveStick;
+    /**
+     * Shooting joystick.
+     */
     private Joystick shootStick;
 
     public OI() {
         driveStick = new Joystick(DRIVE_STICK_PORT);
         shootStick = new Joystick(SHOOT_STICK_PORT);
-        Button shootButton = new JoystickButton(shootStick, 1);
-        shootButton.whenPressed(new ShootCommand());
-        shootButton.whenReleased(new ReloadCommand());
-       
     }
 
-    /* Getters */
+    /**
+     * Gets the driving joystick.
+     *
+     * @return
+     */
     public Joystick getDriveStick() {
         return driveStick;
     }
 
+    /**
+     * Gets the shooting joystick.
+     * NOTE: This is not currently used.
+     *
+     * @return
+     */
     public Joystick getShootStick() {
         return shootStick;
     }

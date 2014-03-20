@@ -76,14 +76,9 @@ public class DriveCommand extends CommandBase {
             if (driveStick.getRawButton(3)) {
                 shooter.spinWinch(1);
             } else if (driveStick.getRawButton(2)) {
-                if (shooter.moveToShootingAngle()) {
                     shooter.fireSolenoid(true);
-                }
             } else if (driveStick.getRawButton(1)) {
-                if (shooter.moveToAngle(200.0)) {
-                    shooter.fireSolenoid(true);
-                }
-
+                shooter.moveToAngle(205.0);
             } else {
                 shooter.spinWinch(0);
                 shooter.fireSolenoid(false);
@@ -101,10 +96,11 @@ public class DriveCommand extends CommandBase {
         } else if (!driveStick.getRawButton(7) && lastOverrideButton) {
             shooter.fireSolenoid(false);
         }
-        if (driveStick.getRawButton(6) && !lastPickupButton) {
-            pickup.toggle();
+        if (driveStick.getRawButton(6)) {
+            pickup.move(true);
+        } else if (driveStick.getRawButton(5)) {
+            pickup.move(false);
         }
-        lastPickupButton = driveStick.getRawButton(6);
         lastOverrideButton = driveStick.getRawButton(7);
     }
 

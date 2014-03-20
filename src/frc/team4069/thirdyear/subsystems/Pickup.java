@@ -49,12 +49,10 @@ public class Pickup extends Subsystem {
     /**
      * Spins the pickup roller.
      *
-     * @param speed The speed for spinning. Negative values ignored.
+     * @param speed The speed for spinning.
      */
     public void spin(double speed) {
-        if (speed < 0) {
-            speed = 0;
-        }
+
         pickupRoller.set(speed);
     }
 

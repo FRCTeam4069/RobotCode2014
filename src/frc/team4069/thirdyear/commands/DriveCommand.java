@@ -48,10 +48,8 @@ public class DriveCommand extends CommandBase {
     protected void initialize() {
         drivetrain.brake();
         lastPickupButton = false;
-        lastOverrideButton = false;
     }
     private boolean lastPickupButton;
-    private boolean lastOverrideButton;
     LowPassFilter xFilter;
     LowPassFilter yFilter;
 
@@ -76,7 +74,7 @@ public class DriveCommand extends CommandBase {
             if (driveStick.getRawButton(3)) {
                 shooter.spinWinch(1);
             } else if (driveStick.getRawButton(2)) {
-                    shooter.fireSolenoid(true);
+                shooter.fireSolenoid(true);
             } else if (driveStick.getRawButton(1)) {
                 shooter.moveToAngle(205.0);
             } else {
@@ -87,21 +85,16 @@ public class DriveCommand extends CommandBase {
         //if (shooter.isArmReady()) {
         if (driveStick.getRawButton(4)) {
             pickup.spin(1);
+        } else if (driveStick.getRawButton(8)) {
+            pickup.spin(-1);
         } else {
             pickup.spin(0);
-            //  }
-        }
-        if (driveStick.getRawButton(7) && pickupIsSafe) {
-            shooter.fireSolenoid(true);
-        } else if (!driveStick.getRawButton(7) && lastOverrideButton) {
-            shooter.fireSolenoid(false);
         }
         if (driveStick.getRawButton(6)) {
             pickup.move(true);
         } else if (driveStick.getRawButton(5)) {
             pickup.move(false);
         }
-        lastOverrideButton = driveStick.getRawButton(7);
     }
 
     // Make this return true when this Command no longer needs to run execute()

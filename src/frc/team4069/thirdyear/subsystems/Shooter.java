@@ -23,7 +23,7 @@ public class Shooter extends Subsystem {
     Talon winchTalon;
     AnalogChannel armPotentiometer;
     Compressor compressor;
-    private static final double MAX_ANGLE = 272.5;
+    private static final double MAX_ANGLE = 268;//272.5;
     private static final double MIN_ANGLE = 180;
     private static final double SHOOTING_ANGLE = MAX_ANGLE;//271;
     private static final double WINCH_P = 0.11;
@@ -110,8 +110,11 @@ public class Shooter extends Subsystem {
      * use of {@link Shooter#moveToAngle(double)}.
      */
     public boolean moveToShootingAngle() {
+        boolean atTarget = getPotentiometerAngle() > SHOOTING_ANGLE;
+        if (atTarget) {
         moveToAngle(SHOOTING_ANGLE);
-        return getPotentiometerAngle() > SHOOTING_ANGLE;
+        }
+        return atTarget;
 
     }
 

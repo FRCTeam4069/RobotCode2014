@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team4069.thirdyear.utils.LowPassFilter;
 import java.util.Date;
 
 /**
@@ -13,16 +14,18 @@ import java.util.Date;
  * @author Edmund
  */
 public class AutonomousCommand extends CommandBase {
-
+    
     protected NetworkTable roborealmTable;
     private DriverStation m_ds;
     private boolean hasLockOn;
     private boolean inPosition;
+    private boolean hotAtStart;
     private Date lockonTime;
     private Date inPositionTime;
+    private LowPassFilter blobFilter = new LowPassFilter(300);
     double blobCountFiltered;
     private static final double GOAL_DIST = 15 * 12;
-
+    
     public AutonomousCommand() {
         requires(drivetrain);
         requires(shooter);
@@ -38,36 +41,37 @@ public class AutonomousCommand extends CommandBase {
         blobCountFiltered = 0;
         hasLockOn = false;
         inPosition = false;
+        hotAtStart = false;
         drivetrain.resetDistance();
         Timer.delay(0.1);
     }
 
     /**
      * Checks for the vision target, drives to the low goal and shoots into the
-     * high goal.
-     * Future implementations may forgo checking for the vision target first,
-     * because if it isn't triggered at the start it will be in the next five
-     * seconds.
+     * high goal. Future implementations may forgo checking for the vision
+     * target first, because if it isn't triggered at the start it will be in
+     * the next five seconds.
      */
     protected void execute() {
         pickup.move(false);
-        double blobCount;
-       // blobCount = ((Double) roborealmTable.getValue("BLOB_COUNT",
-         //       Double.valueOf(0))).doubleValue();
-        blobCount = 1;
-        blobCountFiltered = blobCount * 0.5 + blobCountFiltered * 0.5;
-        if (blobCountFiltered > 0.5 && !hasLockOn) {
+        double blobCount = 0.0;
+        blobCount = blobFilter.calculate(((Double) roborealmTable.getValue("BLOB_COUNT",
+                Double.valueOf(0))).doubleValue());
+        
+        if (blobCount > 0.8) {
+            hotAtStart = true;
+        }
+        
+        if (!hasLockOn && !inPosition) {
             hasLockOn = true;
             lockonTime = new Date();
-        }
-        if (hasLockOn) {
-            driveLoop();
         } else if (inPosition) {
             shootLoop();
+        } else if (hasLockOn) {
+            driveLoop();
         } else {
             drivetrain.brake();
         }
-        System.out.println("Speed " + drivetrain.getSpeed());
     }
 
     /**
@@ -99,7 +103,9 @@ public class AutonomousCommand extends CommandBase {
      */
     private void shootLoop() {
         drivetrain.brake();
-        if (new Date().getTime() - inPositionTime.getTime() > 200) {
+        if (new Date().getTime() - inPositionTime.getTime() > 200 && hotAtStart) {
+            shooter.fireSolenoid(true);
+        } else if (new Date().getTime() - inPositionTime.getTime() > 2000) {
             shooter.fireSolenoid(true);
         }
     }

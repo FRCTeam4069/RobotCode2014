@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.team4069.thirdyear.commands.CommandBase;
 import frc.team4069.thirdyear.commands.AutonomousCommand;
+import frc.team4069.thirdyear.commands.AutonomousMobilityCommand;
 import frc.team4069.thirdyear.commands.DriveCommand;
 
 /**
@@ -23,40 +24,46 @@ import frc.team4069.thirdyear.commands.DriveCommand;
 public class The2014Robot extends IterativeRobot {
 
     private Command autonomousCommand;
+    private Command autonMobilityCommand;
     private Command driveCommand;
 
     /**
-     * Run when the robot is first started up and used for
-     * initialization code.
+     * Run when the robot is first started up and used for initialization code.
      */
     public void robotInit() {
         CommandBase.init();
+        autonMobilityCommand = new AutonomousMobilityCommand();
         autonomousCommand = new AutonomousCommand();
         driveCommand = new DriveCommand();
     }
 
     /**
-     * Called when autonomous control begins.
-     * It schedules an instance of {@link AutonomousCommand}.
+     * Called when autonomous control begins. It schedules an instance of
+     * {@link AutonomousCommand}.
      */
     public void autonomousInit() {
-        autonomousCommand.start();
+        if (m_ds.getDigitalIn(RobotMap.AUTON_SELECTOR_1)) {
+            autonMobilityCommand.start();
+        } else {
+            autonomousCommand.start();
+        }
         driveCommand.cancel();
     }
 
     /**
      * Called periodically during autonomous.
      */
-    public/*Potatoes*/ void autonomousPeriodic() {
+    public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
 
     /**
-     * Called when operator control begins.
-     * It schedules an instance of {@link DriveCommand}.
+     * Called when operator control begins. It schedules an instance of
+     * {@link DriveCommand}.
      */
     public void teleopInit() {
         autonomousCommand.cancel();
+        autonMobilityCommand.cancel();
         driveCommand.start();
     }
 
@@ -74,8 +81,8 @@ public class The2014Robot extends IterativeRobot {
     }
 
     /**
-     * This function is called periodically during test mode.
-     * Currently does nothing.
+     * This function is called periodically during test mode. Currently does
+     * nothing.
      */
     public void testPeriodic() {
         Scheduler.getInstance().run();
@@ -83,6 +90,7 @@ public class The2014Robot extends IterativeRobot {
     }
 
     public void disabledInit() {
+        autonMobilityCommand.cancel();
         autonomousCommand.cancel();
         driveCommand.cancel();
     }

@@ -63,4 +63,10 @@ public interface RobotMap {
      * Reed switch port.
      */
     public static final int WINCH_REEDSWITCH = 6;
+    // DRIVERSTATION
+    /**
+     * Autonomous selector port.
+     */
+    public static final int AUTON_SELECTOR_1 = 1;
+    
 }

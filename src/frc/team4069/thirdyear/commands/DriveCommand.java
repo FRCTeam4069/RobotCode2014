@@ -60,7 +60,7 @@ public class DriveCommand extends CommandBase {
         double currentLeftStickX = (driveStick.getRawAxis(1)) * Math.abs(
                 driveStick.getRawAxis(
                         1)) / 1.8;
-        double currentLeftStickY = driveStick.getRawAxis(3);
+        double currentLeftStickY = -driveStick.getRawAxis(3);
         currentLeftStickX = xFilter.calculate(currentLeftStickX);
         currentLeftStickY = yFilter.calculate(currentLeftStickY);
         //  outputX = currentLeftStickX * 0.07 + lastLeftStickX * 0.93;
@@ -72,11 +72,12 @@ public class DriveCommand extends CommandBase {
         boolean pickupIsSafe = !pickup.getReedSwitch();
         if (pickupIsSafe) {
             if (driveStick.getRawButton(3)) {
-                shooter.spinWinch(1);
+              //  shooter.spinWinch(1);
+                shooter.moveToShootingAngle();
             } else if (driveStick.getRawButton(2)) {
                 shooter.fireSolenoid(true);
             } else if (driveStick.getRawButton(1)) {
-                shooter.moveToAngle(205.0);
+                shooter.spinWinch(-1);
             } else {
                 shooter.spinWinch(0);
                 shooter.fireSolenoid(false);

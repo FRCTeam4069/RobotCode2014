@@ -23,17 +23,17 @@ public class Shooter extends Subsystem {
     Talon winchTalon;
     AnalogChannel armPotentiometer;
     Compressor compressor;
-    private static final double MAX_ANGLE = 268;//272.5;
+    private static final double MAX_ANGLE = 267.5;//272.5;
     private static final double MIN_ANGLE = 180;
-    private static final double SHOOTING_ANGLE = MAX_ANGLE;//271;
-    private static final double WINCH_P = 0.11;
+    private static final double SHOOTING_ANGLE = 264.5;//271;
+    private static final double WINCH_P = 0.16;
 
     public Shooter() {
         transmissionSolenoid = new DoubleSolenoid(RobotMap.WINCH_PISTON_1,
                 RobotMap.WINCH_PISTON_2);
         winchTalon = new Talon(RobotMap.WINCH_MOTOR);
         armPotentiometer = new AnalogChannel(RobotMap.ARM_POTENTIOMETER);
-        armPotentiometer.setOversampleBits(5);
+        armPotentiometer.setOversampleBits(6);
         compressor = new Compressor(RobotMap.PRESSURE_SWITCH,
                 RobotMap.COMPRESSOR);
         compressor.start();
@@ -57,8 +57,13 @@ public class Shooter extends Subsystem {
      * @param speed
      */
     public void spinWinch(double speed) {
-        if (speed > 0.9) speed = 0.89;
-        if (speed < -0.9) speed = -0.89;
+        if (speed > 1) {
+            speed = 1;
+        }
+        if (speed < -1) {
+            speed = -1;
+        }
+        speed *= 0.8;
         if ((getPotentiometerAngle() < MAX_ANGLE && speed >= 0)
                 || (getPotentiometerAngle() > MIN_ANGLE && speed <= 0)) {
             winchTalon.set(-speed);
@@ -110,11 +115,11 @@ public class Shooter extends Subsystem {
      * use of {@link Shooter#moveToAngle(double)}.
      */
     public boolean moveToShootingAngle() {
-        boolean atTarget = getPotentiometerAngle() > SHOOTING_ANGLE;
-        if (atTarget) {
-        moveToAngle(SHOOTING_ANGLE);
-        }
-        return atTarget;
+//        boolean atTarget = Math.abs(getPotentiometerAngle() - SHOOTING_ANGLE) < 1;
+//        if (atTarget) {
+           return moveToAngle(SHOOTING_ANGLE);
+//        }
+//        return atTarget;
 
     }
 
@@ -125,10 +130,11 @@ public class Shooter extends Subsystem {
      * @param angle The desired angle measured from the vertical.
      */
     public boolean moveToAngle(double angle) {
-        spinWinch(WINCH_P * (angle - getPotentiometerAngle()));
-        if (Math.abs(getPotentiometerAngle() - angle) < 1.5) {
+        if (Math.abs(getPotentiometerAngle() - angle) < 0.5) {
             return true;
         }
+
+        spinWinch(WINCH_P * (-angle + getPotentiometerAngle()));
         return false;
     }
 

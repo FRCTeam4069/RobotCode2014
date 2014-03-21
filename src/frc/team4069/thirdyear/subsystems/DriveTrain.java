@@ -93,8 +93,8 @@ public class DriveTrain extends Subsystem {
      * @param right Speed for the right motors.
      */
     public void tankDrive(double left, double right) {
-        leftMotor.set(-left * SPEED_LIMIT);
-        rightMotor.set(right * SPEED_LIMIT);
+        leftMotor.set(left * SPEED_LIMIT);
+        rightMotor.set(-right * SPEED_LIMIT);
     }
     double controllerValue;
 
@@ -128,6 +128,7 @@ public class DriveTrain extends Subsystem {
     public void arcadeDrive(double moveValue, double rotateValue) {
         double leftMotorSpeed;
         double rightMotorSpeed;
+        rotateValue *= -1;
         double theta = MathUtils.atan2(moveValue, rotateValue);
         double r = Math.sqrt(
                 (moveValue * moveValue) + (rotateValue * rotateValue));
@@ -146,8 +147,7 @@ public class DriveTrain extends Subsystem {
      * speed to zero.
      */
     public void brake() {
-        leftMotor.set(0);
-        rightMotor.set(0);
+        tankDrive(0,0);
     }
 
     /**

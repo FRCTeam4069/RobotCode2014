@@ -43,7 +43,6 @@ public class AutonomousCommand extends CommandBase {
         inPosition = false;
         hotAtStart = false;
         drivetrain.resetDistance();
-        Timer.delay(0.1);
     }
 
     /**
@@ -80,17 +79,18 @@ public class AutonomousCommand extends CommandBase {
      */
     private void driveLoop() {
         if (drivetrain.getDistance() < GOAL_DIST * 0.73) {
-            drivetrain.arcadeControlledDrive(-0.7, 0);
+            drivetrain.arcadeControlledDrive(0.6, 0);
         } else if (drivetrain.getDistance() < GOAL_DIST * 0.91) {
-            drivetrain.arcadeControlledDrive(-0.25, 0);
+            shooter.moveToShootingAngle();
+            drivetrain.arcadeControlledDrive(0.25, 0);
         } else if (drivetrain.getDistance() < GOAL_DIST) {
             shooter.moveToShootingAngle();
-            drivetrain.arcadeControlledDrive(-0.25, 0);
+            drivetrain.arcadeControlledDrive(0.2, 0);
         }
         if (drivetrain.getDistance() > GOAL_DIST
                 || (Math.abs(drivetrain.getSpeed()) < 1.0
                 && new Date().getTime() - lockonTime.getTime() > 1000)) {
-            drivetrain.arcadeControlledDrive(0.05, 0);
+            //drivetrain.arcadeControlledDrive(0.05, 0);
             shooter.spinWinch(0);
             hasLockOn = false;
             inPosition = true;

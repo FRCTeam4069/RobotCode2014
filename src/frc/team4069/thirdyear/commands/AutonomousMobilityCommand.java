@@ -38,7 +38,6 @@ public class AutonomousMobilityCommand extends CommandBase {
      * Drives forward. Used for non-shooting autonomous to get mobility points.
      */
     protected void execute() {
-        pickup.move(false);
         if (new Date().getTime() - startTime.getTime() > 1.5 * DELAY) {
             drivetrain.brake();
         } else if (new Date().getTime() - startTime.getTime() > DELAY) {

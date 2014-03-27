@@ -21,6 +21,7 @@ public class DriveCommand extends CommandBase {
 
     private DriverStation m_ds;
     private Joystick driveStick;
+    private Joystick shootStick;
     private static final int FIR_LENGTH = 5;
     private double lastLeftStickX;
     private double lastLeftStickY;
@@ -36,6 +37,7 @@ public class DriveCommand extends CommandBase {
         lastLeftStickY = 0;
         m_ds = DriverStation.getInstance();
         driveStick = oi.getDriveStick();
+        shootStick = oi.getShootStick();
         xFilter = new LowPassFilter(20);
         yFilter = new LowPassFilter(5);
         // Use requires() here to declare subsystem dependencies
@@ -57,6 +59,7 @@ public class DriveCommand extends CommandBase {
      * Periodically called during operator control.
      */
     protected void execute() {
+        System.out.println(shooter.getPotentiometerAngle());
         double currentLeftStickX = (driveStick.getRawAxis(1)) * Math.abs(
                 driveStick.getRawAxis(
                         1)) / 1.8;
@@ -71,12 +74,12 @@ public class DriveCommand extends CommandBase {
         drivetrain.arcadeDrive(currentLeftStickY, currentLeftStickX);
         boolean pickupIsSafe = !pickup.getReedSwitch();
         if (pickupIsSafe) {
-            if (driveStick.getRawButton(3)) {
+            if (shootStick.getRawButton(2)) {
               //  shooter.spinWinch(1);
                 shooter.moveToShootingAngle();
-            } else if (driveStick.getRawButton(2)) {
+            } else if (shootStick.getRawButton(1)) {
                 shooter.fireSolenoid(true);
-            } else if (driveStick.getRawButton(1)) {
+            } else if (shootStick.getRawButton(3)) {
                 shooter.spinWinch(-1);
             } else {
                 shooter.spinWinch(0);
@@ -91,9 +94,9 @@ public class DriveCommand extends CommandBase {
         } else {
             pickup.spin(0);
         }
-        if (driveStick.getRawButton(6)) {
+        if (shootStick.getRawButton(6)) {
             pickup.move(true);
-        } else if (driveStick.getRawButton(5)) {
+        } else if (shootStick.getRawButton(7)) {
             pickup.move(false);
         }
     }

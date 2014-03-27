@@ -23,10 +23,10 @@ public class Shooter extends Subsystem {
     Talon winchTalon;
     AnalogChannel armPotentiometer;
     Compressor compressor;
-    private static final double MAX_ANGLE = 267.5;//272.5;
+    private static final double MAX_ANGLE = 273;//272.5;
     private static final double MIN_ANGLE = 180;
-    private static final double SHOOTING_ANGLE = 264.5;//271;
-    private static final double WINCH_P = 0.16;
+    private static final double SHOOTING_ANGLE = 273;//263.3;//264.0;//271.4;//264.5;//271;
+    private static final double WINCH_P = 0.17;
 
     public Shooter() {
         transmissionSolenoid = new DoubleSolenoid(RobotMap.WINCH_PISTON_1,
@@ -57,15 +57,10 @@ public class Shooter extends Subsystem {
      * @param speed
      */
     public void spinWinch(double speed) {
-        if (speed > 1) {
-            speed = 1;
-        }
-        if (speed < -1) {
-            speed = -1;
-        }
+        speed = Math.min(Math.max(speed, -1), 1);
         speed *= 0.8;
-        if ((getPotentiometerAngle() < MAX_ANGLE && speed >= 0)
-                || (getPotentiometerAngle() > MIN_ANGLE && speed <= 0)) {
+        if ((getPotentiometerAngle() < MAX_ANGLE && speed < 0)
+                || (getPotentiometerAngle() > MIN_ANGLE && speed > 0)) {
             winchTalon.set(-speed);
         } else {
             winchTalon.set(0);
@@ -134,7 +129,7 @@ public class Shooter extends Subsystem {
             return true;
         }
 
-        spinWinch(WINCH_P * (-angle + getPotentiometerAngle()));
+        spinWinch(-WINCH_P * (-angle + getPotentiometerAngle()));
         return false;
     }
 

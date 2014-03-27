@@ -22,7 +22,8 @@ public class AutonomousCommand extends CommandBase {
     private boolean hotAtStart;
     private Date lockonTime;
     private Date inPositionTime;
-    private LowPassFilter blobFilter = new LowPassFilter(300);
+    private Date startTime = new Date();
+    private LowPassFilter blobFilter = new LowPassFilter(200);
     double blobCountFiltered;
     private static final double GOAL_DIST = 15 * 12;
 
@@ -42,6 +43,7 @@ public class AutonomousCommand extends CommandBase {
         hasLockOn = false;
         inPosition = false;
         hotAtStart = false;
+        startTime = new Date();
         drivetrain.resetDistance();
     }
 
@@ -52,6 +54,7 @@ public class AutonomousCommand extends CommandBase {
      * the next five seconds.
      */
     protected void execute() {
+        System.out.println(shooter.getPotentiometerAngle());
         pickup.move(false);
         double blobCount = 0.0;
         blobCount = blobFilter.calculate(((Double) roborealmTable.getValue("BLOB_COUNT",
@@ -59,7 +62,7 @@ public class AutonomousCommand extends CommandBase {
         if (blobCount > 0.8) {
             hotAtStart = true;
         }
-        if (!hasLockOn && !inPosition) {
+        if (!hasLockOn && !inPosition && (hotAtStart || new Date().getTime() - startTime.getTime() > 1800)) {
             hasLockOn = true;
             lockonTime = new Date();
         } else if (inPosition) {

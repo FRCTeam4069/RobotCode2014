@@ -105,16 +105,21 @@ public class DriveTrain extends Subsystem {
      * @param rotateValue Speed for turning. PID controlled.
      */
     public void arcadeControlledDrive(double moveValue, double rotateValue) {
-        if (!arcadeController.isEnable())
-          arcadeController.enable();
-        arcadeController.setSetpoint(rotateValue);
-        controllerValue = arcadeController.get();
-        //controllerValue = arcadeController.get() * 0.3 + controllerValue * 0.7;
         if (Math.abs(moveValue) < 0.01) {
             arcadeDrive(0, 0);
         } else {
-            arcadeDrive(moveValue, rotateValue + controllerValue);// + arcadeController.get());
+            arcadeDrive(moveValue, 2 * rotateValue - getTurnValue());//rotateValue - getTurnValue() + rotateValue);
         }
+//        if (!arcadeController.isEnable())
+//          arcadeController.enable();
+//        arcadeController.setSetpoint(rotateValue);
+//        controllerValue = arcadeController.get();
+//        //controllerValue = arcadeController.get() * 0.3 + controllerValue * 0.7;
+//        if (Math.abs(moveValue) < 0.01) {
+//            arcadeDrive(0, 0);
+//        } else {
+//            arcadeDrive(moveValue, rotateValue + controllerValue);// + arcadeController.get());
+//        }
     }
 
     /**
@@ -147,7 +152,7 @@ public class DriveTrain extends Subsystem {
      * speed to zero.
      */
     public void brake() {
-        tankDrive(0,0);
+        tankDrive(0, 0);
     }
 
     /**

@@ -59,7 +59,6 @@ public class DriveCommand extends CommandBase {
      * Periodically called during operator control.
      */
     protected void execute() {
-        System.out.println(shooter.getPotentiometerAngle());
         double currentLeftStickX = (driveStick.getRawAxis(1)) * Math.abs(
                 driveStick.getRawAxis(
                         1)) / 1.8;
@@ -89,7 +88,7 @@ public class DriveCommand extends CommandBase {
         //if (shooter.isArmReady()) {
         if (driveStick.getRawButton(4)) {
             pickup.spin(1);
-        } else if (driveStick.getRawButton(8)) {
+        } else if (driveStick.getRawButton(3)) {
             pickup.spin(-1);
         } else {
             pickup.spin(0);

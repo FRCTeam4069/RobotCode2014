@@ -70,6 +70,7 @@ public class AutonomousCommand extends CommandBase {
         } else if (hasLockOn) {
             driveLoop();
         } else {
+            shooter.moveToShootingAngle();
             drivetrain.brake();
         }
     }
@@ -81,8 +82,8 @@ public class AutonomousCommand extends CommandBase {
     private void driveLoop() {
         if (drivetrain.getDistance() < GOAL_DIST * 0.73) {
             drivetrain.arcadeControlledDrive(0.6, 0);
+            shooter.moveToShootingAngle();
         } else if (drivetrain.getDistance() < GOAL_DIST * 0.91) {
-            pickup.move(true);
             shooter.moveToShootingAngle();
             drivetrain.arcadeControlledDrive(0.25, 0);
         } else if (drivetrain.getDistance() < GOAL_DIST) {
@@ -101,23 +102,26 @@ public class AutonomousCommand extends CommandBase {
     }
 
     /**
-     * Runs when the robot has detected that it is at the low goal.
+     * Runs when the robot hass detected that it is at the low goal.
      */
     private void shootLoop() {
         drivetrain.brake();
-        if (new Date().getTime() - inPositionTime.getTime() > 1000) {
-            pickup.move(false);
-        }
+//        if (new Date().getTime() - inPositionTime.getTime() > 1000) {
+//            pickup.move(false);
+//        }
 //        if (new Date().getTime() - inPositionTime.getTime() > 200 && hotAtStart) {
 //            shooter.fireSolenoid(true);
 //        } else
-        if (new Date().getTime() - inPositionTime.getTime() > 2000) {
-            shooter.fireSolenoid(true);
-        }
         if (new Date().getTime() - inPositionTime.getTime() > 3000) {
             shooter.fireSolenoid(false);
             shooter.moveToShootingAngle();
+        } else if (new Date().getTime() - inPositionTime.getTime() > 2000) {
+            shooter.spinWinch(0);
+            shooter.fireSolenoid(true);
+        } else {
+            shooter.moveToShootingAngle();
         }
+
     }
 
     // Make this return true when this Command no longer needs to run execute()

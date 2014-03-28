@@ -23,7 +23,7 @@ public class Shooter extends Subsystem {
     Talon winchTalon;
     AnalogChannel armPotentiometer;
     Compressor compressor;
-    private static final double MAX_ANGLE = 273;//272.5;
+    private static final double MAX_ANGLE = 275;//272.5;
     private static final double MIN_ANGLE = 180;
     private static final double SHOOTING_ANGLE = 273;//263.3;//264.0;//271.4;//264.5;//271;
     private static final double WINCH_P = 0.17;
@@ -59,8 +59,8 @@ public class Shooter extends Subsystem {
     public void spinWinch(double speed) {
         speed = Math.min(Math.max(speed, -1), 1);
         speed *= 0.8;
-        if ((getPotentiometerAngle() < MAX_ANGLE && speed < 0)
-                || (getPotentiometerAngle() > MIN_ANGLE && speed > 0)) {
+        if ((getPotentiometerAngle() < MAX_ANGLE && speed > 0)
+                || (getPotentiometerAngle() > MIN_ANGLE && speed < 0)) {
             winchTalon.set(-speed);
         } else {
             winchTalon.set(0);

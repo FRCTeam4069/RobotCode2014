@@ -15,11 +15,16 @@ import frc.team4069.thirdyear.commands.AutonomousMobilityCommand;
 import frc.team4069.thirdyear.commands.DriveCommand;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * So, at the end of build season I still had no idea how command-based 
+ * robots were programmed. They sounded cool, and possibly good for asynchronous
+ * tasks, so I included commands and subsystems for no reason. 
+ * 
+ * After seeing command-based robot projects at competition easily 
+ * exceeding 30 files and 800 lines of code, and seeing people try to
+ * debug them, I decided that it was a good thing I didn't know how to use
+ * commands properly earlier.
+ * 
+ * TODO: Remove commands and subsystems from this robot, asap.
  */
 public class The2014Robot extends IterativeRobot {
 

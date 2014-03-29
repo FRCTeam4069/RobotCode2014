@@ -54,15 +54,17 @@ public class AutonomousCommand extends CommandBase {
      * the next five seconds.
      */
     protected void execute() {
-        System.out.println(shooter.getPotentiometerAngle());
         pickup.move(false);
+        //    System.out.println(shooter.getPotentiometerAngle());
+
         double blobCount = 0.0;
         blobCount = blobFilter.calculate(((Double) roborealmTable.getValue("BLOB_COUNT",
                 Double.valueOf(0))).doubleValue());
         if (blobCount > 0.8) {
             hotAtStart = true;
         }
-        if (!hasLockOn && !inPosition && (hotAtStart || new Date().getTime() - startTime.getTime() > 1800)) {
+        if (!hasLockOn && !inPosition && (hotAtStart
+                || new Date().getTime() - startTime.getTime() > 1500)) {
             hasLockOn = true;
             lockonTime = new Date();
         } else if (inPosition) {
@@ -80,12 +82,12 @@ public class AutonomousCommand extends CommandBase {
      * goal.
      */
     private void driveLoop() {
-        if (drivetrain.getDistance() < GOAL_DIST * 0.73) {
-            drivetrain.arcadeControlledDrive(0.6, 0);
+        if (drivetrain.getDistance() < GOAL_DIST * 0.8) {
+            drivetrain.arcadeControlledDrive(0.8, 0);
             shooter.moveToShootingAngle();
         } else if (drivetrain.getDistance() < GOAL_DIST * 0.91) {
             shooter.moveToShootingAngle();
-            drivetrain.arcadeControlledDrive(0.25, 0);
+            drivetrain.arcadeControlledDrive(0.3, 0);
         } else if (drivetrain.getDistance() < GOAL_DIST) {
             shooter.moveToShootingAngle();
             drivetrain.arcadeControlledDrive(0.2, 0);
@@ -112,10 +114,10 @@ public class AutonomousCommand extends CommandBase {
 //        if (new Date().getTime() - inPositionTime.getTime() > 200 && hotAtStart) {
 //            shooter.fireSolenoid(true);
 //        } else
-        if (new Date().getTime() - inPositionTime.getTime() > 3000) {
+        if (new Date().getTime() - inPositionTime.getTime() > 2500) {
             shooter.fireSolenoid(false);
             shooter.moveToShootingAngle();
-        } else if (new Date().getTime() - inPositionTime.getTime() > 2000) {
+        } else if (new Date().getTime() - inPositionTime.getTime() > 1300) {
             shooter.spinWinch(0);
             shooter.fireSolenoid(true);
         } else {

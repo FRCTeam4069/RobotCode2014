@@ -112,7 +112,12 @@ public class Shooter extends Subsystem {
     public boolean moveToShootingAngle() {
 //        boolean atTarget = Math.abs(getPotentiometerAngle() - SHOOTING_ANGLE) < 1;
 //        if (atTarget) {
-           return moveToAngle(SHOOTING_ANGLE);
+        if ((getPotentiometerAngle() - SHOOTING_ANGLE) > ANGLE_EPSILON) {
+            spinWinch(0);
+            return true;
+        } else {
+            return moveToAngle(SHOOTING_ANGLE);
+        }
 //        }
 //        return atTarget;
 
@@ -125,13 +130,14 @@ public class Shooter extends Subsystem {
      * @param angle The desired angle measured from the vertical.
      */
     public boolean moveToAngle(double angle) {
-        if (Math.abs(getPotentiometerAngle() - angle) < 0.5) {
+        if (Math.abs(getPotentiometerAngle() - angle) < ANGLE_EPSILON) {
             return true;
         }
 
         spinWinch(-WINCH_P * (-angle + getPotentiometerAngle()));
         return false;
     }
+    public static final double ANGLE_EPSILON = 0.5;
 
     /**
      * Adds motor and sensor data to the SmartDashboard.

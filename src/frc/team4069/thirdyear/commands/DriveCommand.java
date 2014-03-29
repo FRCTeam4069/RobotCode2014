@@ -74,12 +74,12 @@ public class DriveCommand extends CommandBase {
         boolean pickupIsSafe = !pickup.getReedSwitch();
         if (pickupIsSafe) {
             if (shootStick.getRawButton(2)) {
-              //  shooter.spinWinch(1);
+                //  shooter.spinWinch(1);
                 shooter.moveToShootingAngle();
             } else if (shootStick.getRawButton(1)) {
                 shooter.fireSolenoid(true);
-            } else if (shootStick.getRawButton(3)) {
-                shooter.spinWinch(-1);
+           // } else if (shootStick.getRawButton(3)) {
+                //     shooter.spinWinch(-1);
             } else {
                 shooter.spinWinch(0);
                 shooter.fireSolenoid(false);
